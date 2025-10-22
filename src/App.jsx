@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import cover from '/cover.jpg'
-import Button from './assets/button/button.jsx'
+import Button from './assets/Button/Button.jsx'
 import arisu from '/Arisu.jpg'
 import Project from './assets/Project/Project.jsx'
 
