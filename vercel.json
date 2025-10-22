@@ -1,0 +1,6 @@
+{
+  "redirects": [
+    { "source": "/", "destination": "/home", "permanent": true },
+    { "source": "/vndb", "destination": "https://vndb.org/u228751/ulist?f=&mul=1&p=1&s=3q02", "permanent": true }
+  ]
+}
