@@ -1,6 +1,15 @@
 {
-  "redirects": [
-    { "source": "/vndb", "destination": "https://vndb.org/u228751/ulist?f=&mul=1&p=1&s=3q02", "permanent": true },
-    { "source": "/old/*", "destination": "/new/:splat", "permanent": true }
-  ]
+    "redirects": [
+        {
+            "source": "/vndb",
+            "destination": "https://vndb.org/u228751/ulist?f=&mul=1&p=1&s=3q02",
+            "permanent": true
+        }
+    ],
+    "rewrites": [
+        {
+            "source": "/(.*)",
+            "destination": "/"
+        }
+    ]
 }
