@@ -75,12 +75,10 @@ function App() {
             What have I done for the osu! Community
           </h1>
           <Project />
-          <div className="text-center font-bold py-16 sm:py-20 space-y-4">
-            <p className="text-4xl sm:text-6xl md:text-8xl">This site is still under construction</p>
-            <p className="text-4xl sm:text-6xl md:text-8xl">my bad</p>
+       
           </div>
+          
         </div>
-      </div>
     </>
   )
 }
