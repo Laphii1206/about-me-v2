@@ -57,7 +57,6 @@ function Project() {
             key={index}
             className="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 dark:bg-gray-800 dark:border-gray-700"
           >
-            {/* Image Section */}
             {item.images.map((image, imgIndex) => (
               <div
                 key={imgIndex}
@@ -72,7 +71,6 @@ function Project() {
               </div>
             ))}
 
-            {/* Content Section */}
             <div className="px-6 py-4">
               <h2 className="font-bold text-xl mb-2 text-gray-800 dark:text-white">
                 {item.title}
@@ -82,7 +80,6 @@ function Project() {
               </p>
             </div>
 
-            {/* Button Section */}
             {item.forum && (
               <div className="px-6 pb-4">
                 <a
@@ -99,7 +96,6 @@ function Project() {
         ))}
       </div>
 
-      {/* Modal for Expanded Image */}
       {modalImage && (
         <div
           className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
