@@ -98,13 +98,13 @@ function Project() {
 
       {modalImage && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+          className="fixed inset-0 bg-black/50 bg-opacity-75 flex items-center justify-center z-50"
           onClick={closeModal}
         >
           <img
             src={modalImage}
             alt="Expanded"
-            className="max-w-full max-h-full rounded-lg shadow-lg"
+            className=" w-auto h-auto max-w-[60%] max-h-[90%] rounded-lg shadow-lg"
           />
         </div>
       )}

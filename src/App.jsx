@@ -9,7 +9,7 @@ function App() {
   return (
     <>
       <div
-        className="relative h-screen bg-cover snap-y snap-mandatory overflow-y-scroll scroll-smooth"
+        className="relative h-screen bg-cover overflow-y-scroll scroll-smooth"
         style={{ backgroundImage: `url(${cover})` }}
       >
         <div className="bg-black/80 tracking-normal h-screen w-full backdrop-blur-[1px] flex items-center justify-center text-center text-white snap-start px-4">
@@ -70,7 +70,7 @@ function App() {
           </div>
         </article>
 
-        <div className="bg-black/80 p-6 sm:p-10 h-screen snap-start scroll-smooth text-white">
+        <div className="bg-black/80 p-6 sm:p-10 min-h-screen snap-start scroll-smooth text-white">
           <h1 className="text-xl sm:text-2xl font-bold mb-6 text-center">
             What have I done for the osu! Community
           </h1>
