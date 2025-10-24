@@ -12,7 +12,6 @@ function App() {
         className="min-h-screen bg-cover bg-center bg-fixed"
         style={{ backgroundImage: `url(${cover})` }}
       >
-        {/* Section 1 */}
         <div className="bg-black/80 h-screen w-full flex items-center justify-center text-center text-white snap-start px-4">
           <div className="space-y-5">
             <p className="text-2xl sm:text-4xl">Hi This is</p>
@@ -24,7 +23,6 @@ function App() {
           </div>
         </div>
 
-        {/* Section 2 */}
         <article className="bg-black/80 flex flex-col md:flex-row items-center justify-center p-6 md:p-10 h-screen snap-start text-white">
           <div className="flex justify-center md:justify-end mb-6 md:mb-0">
             <img
@@ -74,12 +72,14 @@ function App() {
           </div>
         </article>
 
-        {/* Section 3 */}
         <div className="bg-black/80 p-6 sm:p-10 min-h-screen snap-start text-white">
           <h1 className="text-xl sm:text-2xl font-bold mb-6 text-center">
             What have I done for the osu! Community
           </h1>
           <Project />
+        </div>
+        <div className="bg-black/80 p-4 text-center text-white fixed bottom-0 left-0 w-full">
+          © {new Date().getFullYear()} Laphii. All rights reserved.
         </div>
       </div>
     </>

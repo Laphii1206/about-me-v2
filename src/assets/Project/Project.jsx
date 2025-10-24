@@ -26,13 +26,13 @@ const tournament = [
   },
   {
     title: "Suika's Drunken Suiji Cup",
-    description: "suddenly help realshin to playtest replay this out of no where",
+    description: "Join mid-way helping realshin to playtest replay this out of no where",
     forum: "https://osu.ppy.sh/community/forums/topics/1776033?n=1",
     images: [suika],
   },
   {
     title: "osu! Battle Archive Malaysia ",
-    description: "nice and fun tournament hosted by lous",
+    description: "Nice and fun tournament hosted by lous",
     forum: "https://osu.ppy.sh/community/forums/topics/1776033?n=1",
     images: [arona],
   },
