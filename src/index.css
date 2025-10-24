@@ -16,11 +16,11 @@
 }
 
 html {
-  scroll-snap-type: y proximity; /* instead of mandatory */
+  scroll-snap-type: y proximity;
   scroll-behavior: smooth;
 }
 
 section {
   scroll-snap-align: start;
-  scroll-margin-top: 50px; /* adds breathing space */
+  scroll-margin-top: 50px;
 }
