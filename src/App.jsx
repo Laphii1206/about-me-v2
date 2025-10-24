@@ -78,7 +78,7 @@ function App() {
           </h1>
           <Project />
         </div>
-        <div className="bg-black/80 p-4 text-center text-white fixed bottom-0 left-0 w-full">
+        <div className="bg-black/80 p-4 text-center text-white">
           © {new Date().getFullYear()} Laphii. All rights reserved.
         </div>
       </div>
