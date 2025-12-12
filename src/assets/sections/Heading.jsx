@@ -1,5 +1,4 @@
 import React from 'react'
-import cover from '/cover.jpg'
 import Button from '../Button/Button.jsx'
 
 function Heading() {

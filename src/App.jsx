@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import './App.css'
 import cover from '/cover.jpg'
 
@@ -16,7 +15,7 @@ function App() {
       <Heading />
       <Wife />
       <OsuCommunity />
-        <Footer />
+      <Footer />
 
     </div>
 
