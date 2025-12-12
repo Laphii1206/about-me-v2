@@ -1,7 +1,7 @@
 import React from 'react'
 import Project from '../Project/Project.jsx'
 
-function OsuCommunity() {
+function osucommunity() {
   return (
       <div className="bg-black/80 p-6 sm:p-10 min-h-screen snap-start text-white">
         <h1 className="text-xl sm:text-2xl font-bold mb-6 text-center">
@@ -11,4 +11,4 @@ function OsuCommunity() {
       </div>  )
 }
 
-export default OsuCommunity
+export default osucommunity

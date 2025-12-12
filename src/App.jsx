@@ -3,7 +3,7 @@ import cover from '/cover.jpg'
 
 import Wife from './assets/sections/Wife.jsx'
 import Heading from './assets/sections/Heading.jsx'
-import OsuCommunity from './assets/sections/osucommunity.jsx'
+import Osucommunity from './assets/sections/osucommunity.jsx'
 import Footer from './assets/sections/Footer.jsx'
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
     >
       <Heading />
       <Wife />
-      <OsuCommunity />
+      <Osucommunity />
       <Footer />
 
     </div>
