@@ -3,7 +3,7 @@ import Button from '../Button/Button.jsx'
 
 function Heading() {
   return (
-    <header>
+    <header id="home">
       <div className="bg-black/80 h-screen w-full flex items-center justify-center text-center text-white snap-start px-4">
         <div className="space-y-5">
           <p className="text-2xl sm:text-4xl">Hi This is</p>
