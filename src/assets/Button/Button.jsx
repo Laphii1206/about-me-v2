@@ -1,4 +1,6 @@
 import React from 'react'
+import { SiOsu, SiX, SiSteam, SiGoogleSheets } from 'react-icons/si'
+import { FaTrophy, FaBook } from 'react-icons/fa'
 
 export const btnStyle = "inline-flex items-center justify-center px-4 py-2 bg-blue-600 ease-in-out delay-75 hover:bg-blue-700 text-white text-sm font-medium rounded-md active:scale-95 transition-all duration-200";
 
