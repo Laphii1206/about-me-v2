@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from "react";
+import { btnStyle } from "../Button/Button.jsx";
 import beststaff from "/beststaff2020.png";
 import beststaff1 from "/beststaff2022.png";
 import Laphii from "/Laphii.png";
@@ -39,17 +40,41 @@ const TOURNAMENTS = [
 ];
 
 function ImageModal({ src, onClose }) {
+  const [closing, setClosing] = useState(false);
+
   if (!src) return null;
+
+  const handleClose = () => {
+    setClosing(true);
+  };
+
+  const handleAnimationEnd = () => {
+    if (closing) {
+      setClosing(false);
+      onClose();
+    }
+  };
 
   return (
     <div
       className="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
-      onClick={onClose}
+      style={{
+        animation: closing
+          ? "modal-backdrop-out 0.5s ease-in forwards"
+          : "modal-backdrop-in 0.5s ease-out",
+      }}
+      onClick={handleClose}
     >
       <img
         src={src}
         alt="Preview"
         className="max-w-[60%] max-h-[90%] rounded-lg shadow-xl"
+        style={{
+          animation: closing
+            ? "modal-image-out 0.4s ease-in forwards"
+            : "modal-image-in 0.6s cubic-bezier(0.22, 1, 0.36, 1)",
+        }}
+        onAnimationEnd={handleAnimationEnd}
       />
     </div>
   );
@@ -85,7 +110,7 @@ function TournamentCard({ item, onImageClick }) {
             href={item.forum}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            className={btnStyle}
           >
             Forum Post
           </a>

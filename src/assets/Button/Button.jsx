@@ -1,5 +1,7 @@
 import React from 'react'
 
+export const btnStyle = "inline-flex items-center justify-center px-4 py-2 bg-blue-600 ease-in-out delay-75 hover:bg-blue-700 text-white text-sm font-medium rounded-md hover:-translate-y-1 hover:scale-110 active:scale-95 transition-all duration-200";
+
 const content = [
   { label: "osu!", url: "https://osu.ppy.sh/users/9364594" },
   { label: "VNDB", url: "https://vndb.org/u228751/ulist?f=&mul=1&p=1&s=3q02" },
@@ -14,7 +16,7 @@ const Button = () => {
       {content.map(({ label, url }) => (
         <button
           key={label}
-          className="bg-blue-600 text-white rounded-lg px-5 py-2 text-sm sm:text-base hover:bg-blue-700 active:scale-95 transition"
+          className={btnStyle}
           onClick={() => window.open(url, "_blank")}
         >
           {label}

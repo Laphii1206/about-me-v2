@@ -1,4 +1,5 @@
 import React from 'react'
+import { btnStyle } from '../Button/Button.jsx'
 
 function Wife() {
   return (
@@ -39,14 +40,14 @@ function Wife() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
           <a
             href="https://vndb.org/c77134?view=0S-rr2moiyj"
-            className="bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600 transition"
+            className={btnStyle}
             target="_blank"
           >
             VNDB
           </a>
           <a
             href="https://circus-co.jp/product/dc4ph/character/arisu/"
-            className="bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600 transition"
+            className={btnStyle}
             target="_blank"
           >
             Official Website
