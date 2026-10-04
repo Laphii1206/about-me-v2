@@ -1,3 +1,4 @@
+import { useEffect, useRef, type CSSProperties } from 'react'
 import { btnStyle } from '../Button/Button'
 
 const stats: { label: string; value: string; lang?: string; wide?: boolean }[] = [
@@ -10,29 +11,48 @@ const stats: { label: string; value: string; lang?: string; wide?: boolean }[] =
   { label: "Dislike", value: "Loud Noise (Thunder etc.)" },
 ];
 
+const delay = (ms: number) => ({ "--delay": `${ms}ms` }) as CSSProperties
+
 function Wife() {
+  const ref = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return
+      el.dataset.inview = ""
+      observer.disconnect()
+    }, { threshold: 0.2 })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <section
+      ref={ref}
+      data-reveal
       id="wife"
       aria-labelledby="wife-title"
       className="bg-black/80 flex items-center justify-center px-4 py-16 sm:p-10 min-h-screen snap-start text-white"
     >
-      <article className="w-full max-w-5xl grid gap-6 md:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] md:items-center p-4 sm:p-6 rounded-[28px] sm:rounded-[36px] bg-black/50 backdrop-blur-xl shadow-[0_0_0_1px_oklch(1_0_0/0.08),0_24px_48px_-12px_oklch(0_0_0/0.6)]">
+      <article className="enter-card glow relative w-full max-w-5xl grid gap-6 md:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] md:items-center p-4 sm:p-6 rounded-[28px] sm:rounded-[36px] bg-black/50 backdrop-blur-xl shadow-[0_0_0_1px_oklch(1_0_0/0.08),0_24px_48px_-12px_oklch(0_0_0/0.6)]">
         <img
           src="/Arisu.jpg"
           alt="My Wife"
           loading="lazy"
           width={508}
           height={550}
-          className="w-full max-w-sm mx-auto md:max-w-none aspect-[508/550] object-cover rounded-xl shadow-xl shadow-black/40 outline outline-1 -outline-offset-1 outline-white/10"
+          style={delay(80)}
+          className="enter-pop w-full max-w-sm mx-auto md:max-w-none aspect-[508/550] object-cover rounded-xl shadow-xl shadow-black/40 outline outline-1 -outline-offset-1 outline-white/10"
         />
 
         <div className="flex flex-col gap-6 min-w-0">
-          <h2 id="wife-title" className="text-3xl sm:text-5xl font-bold text-balance">
+          <h2 id="wife-title" className="enter text-3xl sm:text-5xl font-bold text-balance" style={delay(160)}>
             My Wife!
           </h2>
 
-          <p lang="ja" className="text-base sm:text-lg leading-[1.8] text-white/75">
+          <p lang="ja" className="enter text-base sm:text-lg leading-[1.8] text-white/75" style={delay(220)}>
             {"天然でお日様のように明るく、周囲から好かれる生まれながらのお嬢様。" +
               "飾らない人柄が男女ともに人気で、学園のアイドル的な存在になっている。" +
               "特定の恋人を作る気はないようだが、" +
@@ -40,10 +60,11 @@ function Wife() {
           </p>
 
           <dl className="grid grid-cols-2 gap-3">
-            {stats.map(({ label, value, lang, wide }) => (
+            {stats.map(({ label, value, lang, wide }, i) => (
               <div
                 key={label}
-                className={`rounded-xl bg-white/5 p-3 shadow-[0_0_0_1px_oklch(1_0_0/0.06)] ${wide ? "col-span-2" : ""}`}
+                style={delay(280 + i * 40)}
+                className={`enter relative rounded-xl bg-white/5 p-3 shadow-[0_0_0_1px_oklch(1_0_0/0.06)] transition-transform duration-150 ease-out hover:-translate-y-0.5 after:pointer-events-none after:absolute after:inset-0 after:rounded-xl after:shadow-[0_0_0_1px_oklch(1_0_0/0.18)] after:opacity-0 after:transition-opacity after:duration-150 after:ease-out hover:after:opacity-100 ${wide ? "col-span-2" : ""}`}
               >
                 <dt className="text-xs font-medium uppercase tracking-wider text-white/60">{label}</dt>
                 <dd lang={lang} className="mt-1 font-medium">{value}</dd>
@@ -51,7 +72,7 @@ function Wife() {
             ))}
           </dl>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="enter flex flex-wrap gap-3" style={delay(560)}>
             <a
               href="https://vndb.org/c77134?view=0S-rr2moiyj"
               className={btnStyle}
