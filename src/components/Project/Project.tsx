@@ -1,12 +1,19 @@
-import React, { useState, useCallback } from "react";
-import { btnStyle } from "../Button/Button.jsx";
-import beststaff from "/beststaff2020.png";
-import beststaff1 from "/beststaff2022.png";
-import Laphii from "/Laphii.png";
-import suika from "/suika.png";
-import arona from "/aronaStaff.gif";
+import { useState, useCallback } from "react";
+import { btnStyle } from "../Button/Button";
+const beststaff = "/beststaff2020.png";
+const beststaff1 = "/beststaff2022.png";
+const Laphii = "/Laphii.png";
+const suika = "/suika.png";
+const arona = "/aronaStaff.gif";
 
-const TOURNAMENTS = [
+type Tournament = {
+  title: string;
+  description: string;
+  forum?: string;
+  images: string[];
+};
+
+const TOURNAMENTS: Tournament[] = [
   {
     title: "Osu! Malaysia Tournament 2020 Best Staff",
     description: "Awarded for outstanding contribution as a staff member.",
@@ -39,7 +46,7 @@ const TOURNAMENTS = [
   },
 ];
 
-function ImageModal({ src, onClose }) {
+function ImageModal({ src, onClose }: { src: string | null; onClose: () => void }) {
   const [closing, setClosing] = useState(false);
 
   if (!src) return null;
@@ -80,7 +87,7 @@ function ImageModal({ src, onClose }) {
   );
 }
 
-function TournamentCard({ item, onImageClick }) {
+function TournamentCard({ item, onImageClick }: { item: Tournament; onImageClick: (src: string) => void }) {
   return (
     <div className="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 dark:bg-gray-800 dark:border-gray-700">
       {item.images.map((image, index) => (
@@ -121,9 +128,9 @@ function TournamentCard({ item, onImageClick }) {
 }
 
 export default function Project() {
-  const [modalImage, setModalImage] = useState(null);
+  const [modalImage, setModalImage] = useState<string | null>(null);
 
-  const openModal = useCallback((src) => setModalImage(src), []);
+  const openModal = useCallback((src: string) => setModalImage(src), []);
   const closeModal = useCallback(() => setModalImage(null), []);
 
   return (

@@ -1,5 +1,4 @@
-import React from 'react'
-import { btnStyle } from '../Button/Button.jsx'
+import { btnStyle } from '../Button/Button'
 
 function Wife() {
   return (

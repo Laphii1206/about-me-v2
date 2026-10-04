@@ -1,4 +1,3 @@
-import React from 'react'
 import { SiOsu, SiX, SiSteam, SiGooglesheets  } from 'react-icons/si'
 import { FaBook } from 'react-icons/fa'
 
