@@ -10,3 +10,7 @@ CLAUDE.md
 !.vscode/extensions.json
 .idea
 .DS_Store
+
+.agents
+.claude
+skills-lock.json

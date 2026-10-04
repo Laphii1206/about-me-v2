@@ -5,7 +5,7 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
+  color-scheme: dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: gray;
 
@@ -25,22 +25,47 @@ section {
   scroll-margin-top: 50px;
 }
 
-@keyframes modal-backdrop-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+dialog.preview,
+dialog.preview::backdrop {
+  opacity: 0;
+  transition-property: opacity, scale, display, overlay;
+  transition-duration: 150ms;
+  transition-timing-function: ease-out;
+  transition-behavior: allow-discrete;
 }
 
-@keyframes modal-backdrop-out {
-  from { opacity: 1; }
-  to { opacity: 0; }
+dialog.preview {
+  scale: 0.96;
 }
 
-@keyframes modal-image-in {
-  from { opacity: 0; transform: scale(0.75); }
-  to { opacity: 1; transform: scale(1); }
+dialog.preview::backdrop {
+  background-color: oklch(0 0 0 / 0.6);
 }
 
-@keyframes modal-image-out {
-  from { opacity: 1; transform: scale(1); }
-  to { opacity: 0; transform: scale(0.75); }
+dialog.preview[open],
+dialog.preview[open]::backdrop {
+  opacity: 1;
+  transition-duration: 250ms;
+}
+
+dialog.preview[open] {
+  scale: 1;
+}
+
+@starting-style {
+  dialog.preview[open],
+  dialog.preview[open]::backdrop {
+    opacity: 0;
+  }
+
+  dialog.preview[open] {
+    scale: 0.96;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  dialog.preview,
+  dialog.preview::backdrop {
+    transition: none;
+  }
 }

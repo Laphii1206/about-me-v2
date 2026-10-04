@@ -1,10 +1,10 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { btnStyle } from "../Button/Button";
-const beststaff = "/beststaff2020.png";
-const beststaff1 = "/beststaff2022.png";
-const Laphii = "/Laphii.png";
-const suika = "/suika.png";
-const arona = "/aronaStaff.gif";
+const beststaff = "/beststaff2020.webp";
+const beststaff1 = "/beststaff2022.webp";
+const Laphii = "/Laphii.webp";
+const suika = "/suika.webp";
+const arona = "/aronaStaff.mp4";
 
 type Tournament = {
   title: string;
@@ -12,6 +12,8 @@ type Tournament = {
   forum?: string;
   images: string[];
 };
+
+type Preview = { src: string; alt: string };
 
 const TOURNAMENTS: Tournament[] = [
   {
@@ -35,84 +37,56 @@ const TOURNAMENTS: Tournament[] = [
   {
     title: "Suika's Drunken Suiji Cup",
     description: "Join mid-way helping realshin to playtest replay this out of no where",
-    forum: "https://osu.ppy.sh/community/forums/topics/1776033?n=1",
+    forum: "https://osu.ppy.sh/community/forums/topics/1851914?n=1",
     images: [suika],
   },
   {
     title: "osu! Battle Archive Malaysia",
     description: "Nice and fun tournament hosted by lous",
-    forum: "https://osu.ppy.sh/community/forums/topics/1776033?n=1",
+    forum: "https://osu.ppy.sh/community/forums/topics/1393142?n=1",
     images: [arona],
   },
 ];
 
-function ImageModal({ src, onClose }: { src: string | null; onClose: () => void }) {
-  const [closing, setClosing] = useState(false);
+const isVideo = (src: string) => src.endsWith(".mp4");
 
-  if (!src) return null;
-
-  const handleClose = () => {
-    setClosing(true);
-  };
-
-  const handleAnimationEnd = () => {
-    if (closing) {
-      setClosing(false);
-      onClose();
-    }
-  };
-
-  return (
-    <div
-      className="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
-      style={{
-        animation: closing
-          ? "modal-backdrop-out 0.5s ease-in forwards"
-          : "modal-backdrop-in 0.5s ease-out",
-      }}
-      onClick={handleClose}
-    >
-      <img
-        src={src}
-        alt="Preview"
-        className="max-w-[60%] max-h-[90%] rounded-lg shadow-xl"
-        style={{
-          animation: closing
-            ? "modal-image-out 0.4s ease-in forwards"
-            : "modal-image-in 0.6s cubic-bezier(0.22, 1, 0.36, 1)",
-        }}
-        onAnimationEnd={handleAnimationEnd}
-      />
-    </div>
+function Media({ src, alt, className, loading }: Preview & { className: string; loading?: "lazy" }) {
+  return isVideo(src) ? (
+    <video src={src} aria-label={alt} autoPlay muted loop playsInline className={className} />
+  ) : (
+    <img src={src} alt={alt} loading={loading} className={className} />
   );
 }
 
-function TournamentCard({ item, onImageClick }: { item: Tournament; onImageClick: (src: string) => void }) {
+function TournamentCard({ item, onImageClick }: { item: Tournament; onImageClick: (preview: Preview) => void }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 dark:bg-gray-800 dark:border-gray-700">
-      {item.images.map((image, index) => (
-        <div
-          key={index}
-          className="relative group cursor-pointer"
-          onClick={() => onImageClick(image)}
+    <article className="flex flex-col bg-gray-800 rounded-lg overflow-hidden shadow-[0_0_0_1px_oklch(1_0_0/0.08)] hover:shadow-[0_0_0_1px_oklch(1_0_0/0.13)] transition-shadow duration-150 ease-out">
+      {item.images.map((image) => (
+        <button
+          key={image}
+          type="button"
+          aria-label={`Enlarge ${item.title} image`}
+          className="group block overflow-hidden bg-black/40 cursor-zoom-in"
+          onClick={() => onImageClick({ src: image, alt: item.title })}
         >
-          <img
+          <Media
             src={image}
             alt={item.title}
-            className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+            loading="lazy"
+            className="w-full aspect-video object-contain transition-transform duration-150 ease-out group-hover:scale-110"
           />
-        </div>
+        </button>
       ))}
 
       <div className="px-6 py-4">
-        <h2 className="font-bold text-xl mb-2 text-gray-800 dark:text-white">
+        <h3 className="font-bold text-lg mb-2 text-white">
           {item.title}
-        </h2>
-        <p className="text-gray-700 dark:text-gray-300">{item.description}</p>
+        </h3>
+        <p className="text-gray-300">{item.description}</p>
       </div>
 
       {item.forum && (
-        <div className="px-6 pb-4">
+        <div className="mt-auto px-6 pb-4">
           <a
             href={item.forum}
             target="_blank"
@@ -123,25 +97,41 @@ function TournamentCard({ item, onImageClick }: { item: Tournament; onImageClick
           </a>
         </div>
       )}
-    </div>
+    </article>
   );
 }
 
 export default function Project() {
-  const [modalImage, setModalImage] = useState<string | null>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const [preview, setPreview] = useState<Preview | null>(null);
 
-  const openModal = useCallback((src: string) => setModalImage(src), []);
-  const closeModal = useCallback(() => setModalImage(null), []);
+  const openModal = useCallback((next: Preview) => {
+    setPreview(next);
+    dialogRef.current?.showModal();
+  }, []);
 
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
-        {TOURNAMENTS.map((item, index) => (
-          <TournamentCard key={index} item={item} onImageClick={openModal} />
+        {TOURNAMENTS.map((item) => (
+          <TournamentCard key={item.title} item={item} onImageClick={openModal} />
         ))}
       </div>
 
-      <ImageModal src={modalImage} onClose={closeModal} />
+      <dialog
+        ref={dialogRef}
+        aria-label={preview?.alt}
+        className="preview m-auto p-0 bg-transparent max-w-[90vw] max-h-[90vh] overflow-visible"
+        onClick={() => dialogRef.current?.close()}
+      >
+        {preview && (
+          <Media
+            src={preview.src}
+            alt={preview.alt}
+            className="block max-w-[90vw] max-h-[90vh] md:max-w-[60vw] rounded-lg shadow-xl outline outline-1 -outline-offset-1 outline-white/10"
+          />
+        )}
+      </dialog>
     </>
   );
 }

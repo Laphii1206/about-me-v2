@@ -1,7 +1,11 @@
 body {
   min-height: 100vh;
-  background-image: url('/cover.jpg');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: url('/cover.jpg') center / cover;
 }
