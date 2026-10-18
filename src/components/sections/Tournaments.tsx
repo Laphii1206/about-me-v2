@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Project from '../Project/Project'
 import { btnStyle } from '../Button/Button'
+import { FiArrowUpRight, FiAward } from 'react-icons/fi'
 
 const SHEET = "https://docs.google.com/spreadsheets/d/1dCUqfqQC7rHrAj6Tg9IQXhuwJd_hIWo1mj7pRJ0q1OE/export?format=csv&gid="
 const PLAY_GID = "1101075790"
@@ -90,7 +91,7 @@ function parsePlay(rows: string[][]): Play[] {
       })
     }
   })
-  return out
+  return out.reverse()
 }
 
 async function fetchTab(gid: string) {
@@ -99,31 +100,50 @@ async function fetchTab(gid: string) {
   return parseCsv(await res.text())
 }
 
-const card = "rounded-xl bg-black/50 backdrop-blur-md p-4 min-w-0 break-words shadow-[0_0_0_1px_oklch(1_0_0/0.06)]"
-const chip = "rounded-full px-2.5 py-0.5 text-xs font-medium"
+const card = "rounded-xl bg-black/65 backdrop-blur-md p-4 min-w-0 break-words shadow-[0_0_0_1px_oklch(1_0_0/0.08)]"
+const chip = "rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset"
 const roleTint: Record<string, string> = {
-  Host: "bg-rose-400/15 text-rose-200",
-  Admin: "bg-violet-400/15 text-violet-200",
-  Spreadsheets: "bg-emerald-400/15 text-emerald-200",
-  Pooler: "bg-cyan-400/15 text-cyan-200",
-  Playtester: "bg-lime-400/15 text-lime-200",
-  Streamer: "bg-fuchsia-400/15 text-fuchsia-200",
-  Referee: "bg-blue-400/15 text-blue-200",
+  Host: "bg-rose-400/15 text-rose-200 ring-rose-400/30",
+  Admin: "bg-violet-400/15 text-violet-200 ring-violet-400/30",
+  Spreadsheets: "bg-emerald-400/15 text-emerald-200 ring-emerald-400/30",
+  Pooler: "bg-cyan-400/15 text-cyan-200 ring-cyan-400/30",
+  Playtester: "bg-lime-400/15 text-lime-200 ring-lime-400/30",
+  Streamer: "bg-fuchsia-400/15 text-fuchsia-200 ring-fuchsia-400/30",
+  Referee: "bg-blue-400/15 text-blue-200 ring-blue-400/30",
 }
-const badgeChip = "shrink-0 rounded-full bg-amber-400/20 px-2.5 py-0.5 text-xs font-medium text-amber-200"
-const link = "underline decoration-white/30 underline-offset-2 hover:decoration-white"
+const badgeChip = "shrink-0 inline-flex items-center gap-1 rounded-full bg-amber-400/20 px-2.5 py-0.5 text-xs font-medium text-amber-200 ring-1 ring-inset ring-amber-400/40"
+const link = "underline decoration-white/30 underline-offset-2 hover:decoration-white focus-visible:outline-2 focus-visible:outline-white rounded-sm"
+
+function ExtLink({ href, children }: { href: string; children: string }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className={link}>
+      {children}
+      <FiArrowUpRight aria-hidden="true" className="ml-0.5 inline align-[-0.1em] text-[0.85em] opacity-60" />
+    </a>
+  )
+}
+
+function Badge() {
+  return <span className={badgeChip}><FiAward aria-hidden="true" />Badge</span>
+}
+
+function groupByYear<T>(items: T[], year: (item: T) => string) {
+  const groups = new Map<string, T[]>()
+  for (const item of items) groups.set(year(item), [...groups.get(year(item)) ?? [], item])
+  return [...groups]
+}
 
 function StaffCard({ item }: { item: Staff }) {
   return (
     <article className={card}>
       <div className="flex items-start justify-between gap-2">
-        <h3 className="font-bold min-w-0">
-          {item.forum ? <a href={item.forum} target="_blank" rel="noopener noreferrer" className={link}>{item.name}</a> : item.name}
-        </h3>
-        {item.badge && <span className={badgeChip}>Badge</span>}
+        <h4 className="font-bold min-w-0">
+          {item.forum ? <ExtLink href={item.forum}>{item.name}</ExtLink> : item.name}
+        </h4>
+        {item.badge && <Badge />}
       </div>
-      <p className="mt-1 text-sm text-white/60">
-        {item.sheet ? <a href={item.sheet} target="_blank" rel="noopener noreferrer" className={link}>{item.acronym}</a> : item.acronym}
+      <p className="mt-1 text-sm text-white/70">
+        {item.sheet ? <ExtLink href={item.sheet}>{item.acronym}</ExtLink> : item.acronym}
         {" · "}{item.start} – {item.end}
       </p>
       <ul className="mt-3 flex flex-wrap gap-1.5">
@@ -157,23 +177,35 @@ function readCache(): { play: Play[]; staff: Staff[] } | null {
   }
 }
 
+function tagTone(v: string) {
+  if (/elim|dnq|did not qualify/i.test(v)) return "bg-red-400/10 text-red-200 ring-red-400/30"
+  if (/seed/i.test(v)) return "bg-sky-400/10 text-sky-200 ring-sky-400/25"
+  return "bg-white/10 text-white/90 ring-white/15"
+}
+
 function PlayCard({ item }: { item: Play }) {
   const solo = item.team === "-" || !item.team
   return (
-    <article className={card}>
-      <div className="flex items-start justify-between gap-2">
-        <h3 className="font-bold min-w-0">{item.name}</h3>
-        {item.badge && <span className={badgeChip}>Badge</span>}
+    <article className="flex flex-col justify-between gap-3 rounded-xl border border-white/10 bg-neutral-900/80 backdrop-blur-md p-4 min-w-0 break-words">
+      <div>
+        <div className="flex items-start justify-between gap-2">
+          <h4 className="font-bold min-w-0">{item.name}</h4>
+          {item.badge && <Badge />}
+        </div>
+        <p className="mt-1 text-sm text-gray-400">
+          {[item.acronym, item.rank, item.format].filter(Boolean).join(" · ")}
+        </p>
+        <p className="mt-3 text-sm font-bold text-white">{solo ? "Solo" : item.team}</p>
+        {!solo && <p className="mt-0.5 text-xs leading-relaxed text-neutral-300 whitespace-pre-line">{item.lineup}</p>}
+        <ul className="mt-3 flex flex-wrap gap-1.5">
+          {[item.seed, item.result].filter(Boolean).map((v) => <li key={v} className={`${chip} ${tagTone(v)}`}>{v}</li>)}
+        </ul>
       </div>
-      <p className="mt-1 text-sm text-white/60">
-        {[item.acronym, item.year, item.rank, item.format].filter(Boolean).join(" · ")}
-      </p>
-      <p className="mt-3 text-sm font-medium">{solo ? "Solo" : item.team}</p>
-      {!solo && <p className="text-sm text-white/60 whitespace-pre-line">{item.lineup}</p>}
-      <ul className="mt-3 flex flex-wrap gap-1.5">
-        {[item.seed, item.result].filter(Boolean).map((v) => <li key={v} className={`${chip} bg-white/10`}>{v}</li>)}
-      </ul>
-      {item.comment && <p className="mt-3 text-sm italic text-white/75">{item.comment}</p>}
+      {item.comment && (
+        <p className="rounded-r-md border-l-2 border-yellow-500 bg-white/5 px-3 py-2 text-sm italic text-white/80">
+          {item.comment}
+        </p>
+      )}
     </article>
   )
 }
@@ -182,7 +214,17 @@ function Tournaments() {
   const [tab, setTab] = useState<Tab>("play")
   const [data, setData] = useState(readCache)
   const [status, setStatus] = useState<"loading" | "error" | "ok">("loading")
-  const [syncedAt, setSyncedAt] = useState("")
+  const [roles, setRoles] = useState<string[]>([])
+
+  const toggleRole = (role: string) =>
+    setRoles((r) => r.includes(role) ? r.filter((x) => x !== role) : [...r, role])
+
+  const staff = data?.staff.filter((s) => !roles.length || s.roles.some((r) => roles.includes(r))) ?? []
+  const groups = !data ? [] : tab === "play"
+    ? groupByYear(data.play, (p) => p.year).map(([y, items]) => [y, items.map((item) =>
+        <PlayCard key={`${item.year}-${item.acronym}-${item.name}`} item={item} />)] as const)
+    : groupByYear(staff, (s) => s.start.match(/\d{4}/)?.[0] ?? "").map(([y, items]) => [y, items.map((item) =>
+        <StaffCard key={`${item.start}-${item.acronym}-${item.name}`} item={item} />)] as const)
 
   const sync = async () => {
     setStatus("loading")
@@ -191,7 +233,6 @@ function Tournaments() {
       const next = { play: parsePlay(play), staff: parseStaff(staff) }
       setData(next)
       try { localStorage.setItem(CACHE_KEY, JSON.stringify(next)) } catch { void 0 }
-      setSyncedAt(new Date().toLocaleTimeString())
       setStatus("ok")
     } catch {
       setStatus("error")
@@ -220,7 +261,7 @@ function Tournaments() {
             type="button"
             aria-pressed={tab === id}
             onClick={() => setTab(id)}
-            className={`${btnStyle} aria-pressed:bg-black/70`}
+            className={`${btnStyle} aria-pressed:bg-white aria-pressed:text-black aria-pressed:hover:bg-white`}
           >
             {label}
           </button>
@@ -234,18 +275,45 @@ function Tournaments() {
 
       {tab === "banner" ? <Project /> : (
         <div className="max-w-6xl mx-auto">
-          <p aria-live="polite" className="mb-4 min-h-5 text-center text-sm text-white/60">
+          {tab === "staff" && data && (
+            <div role="group" aria-label="Filter by role" className="mb-4 flex flex-wrap items-center justify-center gap-1.5">
+              {ROLES.map((role) => (
+                <button
+                  key={role}
+                  type="button"
+                  aria-pressed={roles.includes(role)}
+                  onClick={() => toggleRole(role)}
+                  className={`${chip} py-1 transition-colors ${roles.includes(role) ? roleTint[role] : "bg-white/5 text-white/70 ring-white/15 hover:bg-white/10 hover:text-white"}`}
+                >
+                  {role}
+                </button>
+              ))}
+              {roles.length > 0 && (
+                <button type="button" onClick={() => setRoles([])} className="px-2 py-1 text-xs text-white/70 underline underline-offset-2 hover:text-white">
+                  Clear
+                </button>
+              )}
+            </div>
+          )}
+          <p aria-live="polite" className="mb-4 min-h-5 text-center text-sm text-white/70">
             {status === "error" && "Couldn't load the sheet."}
             {status === "loading" && !data && <span className="sr-only">Loading from Google Sheets…</span>}
-            {status !== "error" && data && `${tab === "play" ? `${data.play.length} played` : `${data.staff.length} staffed`}${status === "ok" ? ` · synced ${syncedAt}` : ""}`}
+            {status !== "error" && data && (tab === "play"
+              ? `${data.play.length} played`
+              : roles.length ? `${staff.length} of ${data.staff.length} staffed` : `${data.staff.length} staffed`)}
           </p>
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-            {!data
-              ? status === "loading" && Array.from({ length: 6 }, (_, i) => <SkeletonCard key={i} />)
-              : tab === "play"
-                ? data.play.map((item) => <PlayCard key={`${item.year}-${item.acronym}-${item.name}`} item={item} />)
-                : data.staff.map((item) => <StaffCard key={`${item.start}-${item.acronym}-${item.name}`} item={item} />)}
-          </div>
+          {!data ? (
+            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+              {status === "loading" && Array.from({ length: 6 }, (_, i) => <SkeletonCard key={i} />)}
+            </div>
+          ) : groups.map(([year, cards]) => (
+            <section key={year} aria-labelledby={`${tab}-${year}`} className="mt-8 first-of-type:mt-0">
+              <h3 id={`${tab}-${year}`} className="mb-3 flex items-center gap-3 text-sm font-semibold tracking-wider text-white/80 after:h-px after:flex-1 after:bg-white/15">
+                {year || "Other"}
+              </h3>
+              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">{cards}</div>
+            </section>
+          ))}
         </div>
       )}
     </section>

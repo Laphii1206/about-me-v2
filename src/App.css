@@ -9,3 +9,9 @@ body::before {
   z-index: -1;
   background: url('/cover.jpg') center / cover;
 }
+
+@media (max-width: 767px) {
+  body::before {
+    background-position: 78% center;
+  }
+}
