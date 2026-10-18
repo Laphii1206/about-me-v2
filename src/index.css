@@ -16,13 +16,7 @@
 }
 
 html {
-  scroll-snap-type: y proximity;
   scroll-behavior: smooth;
-}
-
-section {
-  scroll-snap-align: start;
-  scroll-margin-top: 50px;
 }
 
 dialog.preview,

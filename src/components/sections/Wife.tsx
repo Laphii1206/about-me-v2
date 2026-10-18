@@ -34,7 +34,7 @@ function Wife() {
       data-reveal
       id="wife"
       aria-labelledby="wife-title"
-      className="bg-black/80 flex items-center justify-center px-4 py-16 sm:p-10 min-h-screen snap-start text-white"
+      className="bg-black/80 flex items-center justify-center px-4 pt-16 pb-6 sm:px-10 flex-1 text-white"
     >
       <article className="enter-card glow relative w-full max-w-5xl grid gap-6 md:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] md:items-center p-4 sm:p-6 rounded-[28px] sm:rounded-[36px] bg-black/50 backdrop-blur-xl shadow-[0_0_0_1px_oklch(1_0_0/0.08),0_24px_48px_-12px_oklch(0_0_0/0.6)]">
         <img
