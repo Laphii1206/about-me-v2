@@ -3,7 +3,7 @@ import Project from '../Project/Project'
 import { btnStyle } from '../Button/Button'
 import { FiArrowUpRight, FiAward } from 'react-icons/fi'
 
-const SHEET = "https://docs.google.com/spreadsheets/d/1dCUqfqQC7rHrAj6Tg9IQXhuwJd_hIWo1mj7pRJ0q1OE/export?format=csv&gid="
+const SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQigzR3rKfhg2kD3UDReHlG2PsMrCT66ZZFcEczwRZe1aCOOItHB0DwbxfrXRHpfyeY6PzYiY5Jgzrr/pub?single=true&output=csv&gid="
 const PLAY_GID = "1101075790"
 const STAFF_GID = "1302328235"
 const ROLES = ["Host", "Admin", "Spreadsheets", "Pooler", "Playtester", "Streamer", "Referee"]
