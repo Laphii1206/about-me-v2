@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, type CSSProperties } from "react";
 import { btnStyle } from "../Button/Button";
 const beststaff = "/beststaff2020.webp";
 const beststaff1 = "/beststaff2022.webp";
@@ -58,9 +58,12 @@ function Media({ src, alt, className, loading }: Preview & { className: string; 
   );
 }
 
-function TournamentCard({ item, onImageClick }: { item: Tournament; onImageClick: (preview: Preview) => void }) {
+function TournamentCard({ item, i, onImageClick }: { item: Tournament; i: number; onImageClick: (preview: Preview) => void }) {
   return (
-    <article className="flex flex-col bg-gray-800 rounded-lg overflow-hidden shadow-[0_0_0_1px_oklch(1_0_0/0.08)] hover:shadow-[0_0_0_1px_oklch(1_0_0/0.13)] transition-shadow duration-150 ease-out">
+    <article
+      style={{ "--delay": `${i * 60}ms` } as CSSProperties}
+      className="hero-enter flex flex-col bg-gray-800 rounded-lg overflow-hidden shadow-[0_0_0_1px_oklch(1_0_0/0.08)] hover:shadow-[0_0_0_1px_oklch(1_0_0/0.13)] motion-safe:hover:-translate-y-0.5 transition-[box-shadow,translate] duration-150 ease-out"
+    >
       {item.images.map((image) => (
         <button
           key={image}
@@ -113,8 +116,8 @@ export default function Project() {
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
-        {TOURNAMENTS.map((item) => (
-          <TournamentCard key={item.title} item={item} onImageClick={openModal} />
+        {TOURNAMENTS.map((item, i) => (
+          <TournamentCard key={item.title} item={item} i={i} onImageClick={openModal} />
         ))}
       </div>
 

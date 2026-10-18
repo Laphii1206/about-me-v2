@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
 import Project from '../Project/Project'
 import { btnStyle } from '../Button/Button'
 import { FiArrowUpRight, FiAward } from 'react-icons/fi'
@@ -113,6 +113,8 @@ const roleTint: Record<string, string> = {
 }
 const badgeChip = "shrink-0 inline-flex items-center gap-1 rounded-full bg-amber-400/20 px-2.5 py-0.5 text-xs font-medium text-amber-200 ring-1 ring-inset ring-amber-400/40"
 const link = "underline decoration-white/30 underline-offset-2 hover:decoration-white focus-visible:outline-2 focus-visible:outline-white rounded-sm"
+const enter = "hero-enter transition-transform duration-150 ease-out motion-safe:hover:-translate-y-0.5"
+const delay = (i: number) => ({ "--delay": `${Math.min(i, 6) * 50}ms` }) as CSSProperties
 
 function ExtLink({ href, children }: { href: string; children: string }) {
   return (
@@ -133,9 +135,9 @@ function groupByYear<T>(items: T[], year: (item: T) => string) {
   return [...groups]
 }
 
-function StaffCard({ item }: { item: Staff }) {
+function StaffCard({ item, i }: { item: Staff; i: number }) {
   return (
-    <article className={card}>
+    <article className={`${card} ${enter}`} style={delay(i)}>
       <div className="flex items-start justify-between gap-2">
         <h4 className="font-bold min-w-0">
           {item.forum ? <ExtLink href={item.forum}>{item.name}</ExtLink> : item.name}
@@ -183,10 +185,10 @@ function tagTone(v: string) {
   return "bg-white/10 text-white/90 ring-white/15"
 }
 
-function PlayCard({ item }: { item: Play }) {
+function PlayCard({ item, i }: { item: Play; i: number }) {
   const solo = item.team === "-" || !item.team
   return (
-    <article className="flex flex-col justify-between gap-3 rounded-xl border border-white/10 bg-neutral-900/80 backdrop-blur-md p-4 min-w-0 break-words">
+    <article style={delay(i)} className={`flex flex-col justify-between gap-3 rounded-xl border border-white/10 bg-neutral-900/80 backdrop-blur-md p-4 min-w-0 break-words ${enter}`}>
       <div>
         <div className="flex items-start justify-between gap-2">
           <h4 className="font-bold min-w-0">{item.name}</h4>
@@ -221,10 +223,10 @@ function Tournaments() {
 
   const staff = data?.staff.filter((s) => !roles.length || s.roles.some((r) => roles.includes(r))) ?? []
   const groups = !data ? [] : tab === "play"
-    ? groupByYear(data.play, (p) => p.year).map(([y, items]) => [y, items.map((item) =>
-        <PlayCard key={`${item.year}-${item.acronym}-${item.name}`} item={item} />)] as const)
-    : groupByYear(staff, (s) => s.start.match(/\d{4}/)?.[0] ?? "").map(([y, items]) => [y, items.map((item) =>
-        <StaffCard key={`${item.start}-${item.acronym}-${item.name}`} item={item} />)] as const)
+    ? groupByYear(data.play, (p) => p.year).map(([y, items]) => [y, items.map((item, i) =>
+        <PlayCard key={`${item.year}-${item.acronym}-${item.name}`} item={item} i={i} />)] as const)
+    : groupByYear(staff, (s) => s.start.match(/\d{4}/)?.[0] ?? "").map(([y, items]) => [y, items.map((item, i) =>
+        <StaffCard key={`${item.start}-${item.acronym}-${item.name}`} item={item} i={i} />)] as const)
 
   const sync = async () => {
     setStatus("loading")
@@ -250,11 +252,11 @@ function Tournaments() {
   return (
     <section id="tournaments" aria-labelledby="tournaments-title"
       className="bg-black/80 px-4 pt-20 pb-10 sm:px-10 flex-1 text-white">
-      <h2 id="tournaments-title" className="text-3xl sm:text-5xl font-bold mb-6 text-center text-balance">
+      <h2 id="tournaments-title" className="hero-enter text-3xl sm:text-5xl font-bold mb-6 text-center text-balance">
         Tournaments
       </h2>
 
-      <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
+      <div className="hero-enter flex flex-wrap items-center justify-center gap-2 mb-6" style={delay(2)}>
         {tabs.map(({ id, label }) => (
           <button
             key={id}
@@ -308,7 +310,7 @@ function Tournaments() {
             </div>
           ) : groups.map(([year, cards]) => (
             <section key={year} aria-labelledby={`${tab}-${year}`} className="mt-8 first-of-type:mt-0">
-              <h3 id={`${tab}-${year}`} className="mb-3 flex items-center gap-3 text-sm font-semibold tracking-wider text-white/80 after:h-px after:flex-1 after:bg-white/15">
+              <h3 id={`${tab}-${year}`} className="hero-enter mb-3 flex items-center gap-3 text-sm font-semibold tracking-wider text-white/80 after:h-px after:flex-1 after:bg-white/15">
                 {year || "Other"}
               </h3>
               <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">{cards}</div>
