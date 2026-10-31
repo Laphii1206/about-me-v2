@@ -49,10 +49,11 @@ const TOURNAMENTS: Tournament[] = [
 ];
 
 const isVideo = (src: string) => src.endsWith(".mp4");
+const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function Media({ src, alt, className, loading }: Preview & { className: string; loading?: "lazy" }) {
   return isVideo(src) ? (
-    <video src={src} aria-label={alt} autoPlay muted loop playsInline className={className} />
+    <video src={src} aria-label={alt} autoPlay={!reducedMotion} muted loop playsInline className={className} />
   ) : (
     <img src={src} alt={alt} loading={loading} className={className} />
   );
@@ -76,15 +77,15 @@ function TournamentCard({ item, i, onImageClick }: { item: Tournament; i: number
             src={image}
             alt={item.title}
             loading="lazy"
-            className="w-full aspect-video object-contain transition-transform duration-150 ease-out group-hover:scale-110"
+            className="w-full aspect-video object-contain transition-transform duration-150 ease-out motion-safe:group-hover:scale-110"
           />
         </button>
       ))}
 
       <div className="px-6 py-4">
-        <h3 className="font-bold text-lg mb-2 text-white">
+        <h2 className="font-bold text-lg mb-2 text-white">
           {item.title}
-        </h3>
+        </h2>
         <p className="text-gray-300">{item.description}</p>
       </div>
 
@@ -126,6 +127,7 @@ export default function Project() {
         aria-label={preview?.alt}
         className="preview m-auto p-0 bg-transparent max-w-[90vw] max-h-[90vh] overflow-visible"
         onClick={() => dialogRef.current?.close()}
+        onTransitionEnd={(e) => { if (!e.currentTarget.open) setPreview(null) }}
       >
         {preview && (
           <Media

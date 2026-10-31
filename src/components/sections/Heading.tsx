@@ -5,7 +5,7 @@ const delay = (ms: number) => ({ "--delay": `${ms}ms` }) as CSSProperties
 
 function Heading() {
   return (
-    <header id="home" className="flex-1 flex">
+    <section id="home" className="flex-1 flex">
       <div className="bg-black/80 flex-1 flex items-center justify-center text-center text-white px-4 pt-16 pb-6">
         <div className="space-y-5">
           <p className="hero-enter text-xl sm:text-2xl text-white/70">Hi, this is</p>
@@ -18,7 +18,7 @@ function Heading() {
           </div>
         </div>
       </div>
-    </header>
+    </section>
   )
 }
 

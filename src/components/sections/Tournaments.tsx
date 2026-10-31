@@ -7,6 +7,8 @@ const SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQigzR3rKfhg2kD3U
 const PLAY_GID = "1101075790"
 const STAFF_GID = "1302328235"
 const ROLES = ["Host", "Admin", "Spreadsheets", "Pooler", "Playtester", "Streamer", "Referee"]
+const STAFF_HEADER = `Start,End,Tournament Name,Acronym,Forum Post,Main Sheet,Status,Badge?,${ROLES.join()}`
+const PLAY_HEADER = ",Tournament,,,Information,,,,Team,,,Comments"
 
 type Staff = {
   name: string
@@ -57,6 +59,7 @@ function parseCsv(text: string) {
 }
 
 function parseStaff(rows: string[][]): Staff[] {
+  if (rows[0].join() !== STAFF_HEADER) throw new Error("Unexpected Input columns")
   return rows.slice(1).filter((r) => r[2]?.trim()).map((r) => ({
     start: r[0],
     end: r[1],
@@ -70,6 +73,7 @@ function parseStaff(rows: string[][]): Staff[] {
 }
 
 function parsePlay(rows: string[][]): Play[] {
+  if (!rows.some((r) => r.join() === PLAY_HEADER)) throw new Error("Unexpected Play columns")
   const out: Play[] = []
   let year = ""
   rows.forEach((r, i) => {
@@ -132,16 +136,16 @@ function Badge() {
 function groupByYear<T>(items: T[], year: (item: T) => string) {
   const groups = new Map<string, T[]>()
   for (const item of items) groups.set(year(item), [...groups.get(year(item)) ?? [], item])
-  return [...groups]
+  return [...groups].sort(([a], [b]) => b.localeCompare(a))
 }
 
 function StaffCard({ item, i }: { item: Staff; i: number }) {
   return (
     <article className={`${card} ${enter}`} style={delay(i)}>
       <div className="flex items-start justify-between gap-2">
-        <h4 className="font-bold min-w-0">
+        <h3 className="font-bold min-w-0">
           {item.forum ? <ExtLink href={item.forum}>{item.name}</ExtLink> : item.name}
-        </h4>
+        </h3>
         {item.badge && <Badge />}
       </div>
       <p className="mt-1 text-sm text-white/70">
@@ -157,7 +161,7 @@ function StaffCard({ item, i }: { item: Staff; i: number }) {
 
 function SkeletonCard() {
   return (
-    <div className={`${card} animate-pulse`} aria-hidden="true">
+    <div className={`${card} motion-safe:animate-pulse`} aria-hidden="true">
       <div className="h-5 w-2/3 rounded bg-white/15" />
       <div className="mt-2 h-3.5 w-1/2 rounded bg-white/10" />
       <div className="mt-4 h-3.5 w-1/3 rounded bg-white/10" />
@@ -173,7 +177,8 @@ const CACHE_KEY = "tournaments"
 
 function readCache(): { play: Play[]; staff: Staff[] } | null {
   try {
-    return JSON.parse(localStorage.getItem(CACHE_KEY) ?? "null")
+    const cache = JSON.parse(localStorage.getItem(CACHE_KEY) ?? "null")
+    return Array.isArray(cache?.play) && Array.isArray(cache?.staff) ? cache : null
   } catch {
     return null
   }
@@ -191,7 +196,7 @@ function PlayCard({ item, i }: { item: Play; i: number }) {
     <article style={delay(i)} className={`flex flex-col justify-between gap-3 rounded-xl border border-white/10 bg-neutral-900/80 backdrop-blur-md p-4 min-w-0 break-words ${enter}`}>
       <div>
         <div className="flex items-start justify-between gap-2">
-          <h4 className="font-bold min-w-0">{item.name}</h4>
+          <h3 className="font-bold min-w-0">{item.name}</h3>
           {item.badge && <Badge />}
         </div>
         <p className="mt-1 text-sm text-gray-400">
@@ -252,9 +257,9 @@ function Tournaments() {
   return (
     <section id="tournaments" aria-labelledby="tournaments-title"
       className="bg-black/80 px-4 pt-20 pb-10 sm:px-10 flex-1 text-white">
-      <h2 id="tournaments-title" className="hero-enter text-3xl sm:text-5xl font-bold mb-6 text-center text-balance">
+      <h1 id="tournaments-title" className="hero-enter text-3xl sm:text-5xl font-bold mb-6 text-center text-balance">
         Tournaments
-      </h2>
+      </h1>
 
       <div className="hero-enter flex flex-wrap items-center justify-center gap-2 mb-6" style={delay(2)}>
         {tabs.map(({ id, label }) => (
@@ -298,21 +303,26 @@ function Tournaments() {
             </div>
           )}
           <p aria-live="polite" className="mb-4 min-h-5 text-center text-sm text-white/70">
-            {status === "error" && "Couldn't load the sheet."}
+            {status === "error" && (data ? "Couldn't refresh the list. Showing a saved copy." : "Couldn't load the list.")}
             {status === "loading" && !data && <span className="sr-only">Loading from Google Sheets…</span>}
             {status !== "error" && data && (tab === "play"
               ? `${data.play.length} played`
               : roles.length ? `${staff.length} of ${data.staff.length} staffed` : `${data.staff.length} staffed`)}
           </p>
+          {status === "error" && (
+            <div className="mb-4 flex justify-center">
+              <button type="button" onClick={sync} className={btnStyle}>Try again</button>
+            </div>
+          )}
           {!data ? (
             <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
               {status === "loading" && Array.from({ length: 6 }, (_, i) => <SkeletonCard key={i} />)}
             </div>
           ) : groups.map(([year, cards]) => (
             <section key={year} aria-labelledby={`${tab}-${year}`} className="mt-8 first-of-type:mt-0">
-              <h3 id={`${tab}-${year}`} className="hero-enter mb-3 flex items-center gap-3 text-sm font-semibold tracking-wider text-white/80 after:h-px after:flex-1 after:bg-white/15">
+              <h2 id={`${tab}-${year}`} className="hero-enter mb-3 flex items-center gap-3 text-sm font-semibold tracking-wider text-white/80 after:h-px after:flex-1 after:bg-white/15">
                 {year || "Other"}
-              </h3>
+              </h2>
               <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">{cards}</div>
             </section>
           ))}

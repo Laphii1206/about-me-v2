@@ -15,8 +15,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-html {
-  scroll-behavior: smooth;
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 dialog.preview,
@@ -59,8 +61,10 @@ dialog.preview[open] {
 
 @media (prefers-reduced-motion: reduce) {
   dialog.preview,
-  dialog.preview::backdrop {
-    transition: none;
+  dialog.preview::backdrop,
+  dialog.preview[open],
+  dialog.preview[open]::backdrop {
+    transition-duration: 1ms;
   }
 }
 

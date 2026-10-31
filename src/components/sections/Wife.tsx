@@ -24,7 +24,7 @@ function Wife() {
       if (!entry.isIntersecting) return
       el.dataset.inview = ""
       observer.disconnect()
-    }, { threshold: 0.2 })
+    })
     observer.observe(el)
     return () => observer.disconnect()
   }, [])
@@ -51,7 +51,7 @@ function Wife() {
         <div className="flex flex-col gap-6 min-w-0">
           <div className="enter" style={delay(160)}>
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-              <h2 id="wife-title" className="text-2xl font-bold text-white text-balance">Sagisawa Arisu</h2>
+              <h1 id="wife-title" className="text-2xl font-bold text-white text-balance">Sagisawa Arisu</h1>
               <span className="bg-yellow-500/20 text-yellow-300 border border-yellow-500/30 text-xs px-2.5 py-0.5 rounded-full">My Wife!</span>
             </div>
             <p lang="ja" className="mt-1 text-sm text-neutral-400">鷺沢 有里栖</p>
@@ -69,7 +69,7 @@ function Wife() {
               <div
                 key={label}
                 style={delay(280 + i * 40)}
-                className={`enter relative rounded-xl bg-white/5 p-3 shadow-[0_0_0_1px_oklch(1_0_0/0.06)] transition-transform duration-150 ease-out hover:-translate-y-0.5 after:pointer-events-none after:absolute after:inset-0 after:rounded-xl after:shadow-[0_0_0_1px_oklch(1_0_0/0.18)] after:opacity-0 after:transition-opacity after:duration-150 after:ease-out hover:after:opacity-100 ${wide ? "col-span-2" : ""}`}
+                className={`enter relative rounded-xl bg-white/5 p-3 shadow-[0_0_0_1px_oklch(1_0_0/0.06)] transition-transform duration-150 ease-out motion-safe:hover:-translate-y-0.5 after:pointer-events-none after:absolute after:inset-0 after:rounded-xl after:shadow-[0_0_0_1px_oklch(1_0_0/0.18)] after:opacity-0 after:transition-opacity after:duration-150 after:ease-out hover:after:opacity-100 ${wide ? "col-span-2" : ""}`}
               >
                 <dt className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">{label}</dt>
                 <dd lang={lang} className="mt-1 text-sm font-medium">{value}</dd>

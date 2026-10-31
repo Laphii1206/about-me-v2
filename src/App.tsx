@@ -32,7 +32,9 @@ function App() {
   return (
     <div className="min-h-dvh flex flex-col">
       <Nav active={page} />
-      <Current />
+      <main className="flex-1 flex flex-col">
+        <Current />
+      </main>
       <Footer />
     </div>
   )
