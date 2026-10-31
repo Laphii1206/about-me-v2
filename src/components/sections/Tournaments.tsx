@@ -1,6 +1,7 @@
-import { useEffect, useState, type CSSProperties } from 'react'
+import { useEffect, useState } from 'react'
 import Project from '../Project/Project'
-import { btnStyle } from '../Button/Button'
+import { btnStyle, focusRing, surfaceStyle } from '../Button/Button'
+import { delay } from '../delay'
 import { FiArrowUpRight, FiAward } from 'react-icons/fi'
 
 const SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQigzR3rKfhg2kD3UDReHlG2PsMrCT66ZZFcEczwRZe1aCOOItHB0DwbxfrXRHpfyeY6PzYiY5Jgzrr/pub?single=true&output=csv&gid="
@@ -36,6 +37,11 @@ type Play = {
 }
 
 type Tab = "play" | "staff" | "banner"
+
+const currentTab = (): Tab => {
+  const tab = location.hash.split("/")[1]
+  return tab === "staff" || tab === "banner" ? tab : "play"
+}
 
 function parseCsv(text: string) {
   const rows: string[][] = []
@@ -104,27 +110,27 @@ async function fetchTab(gid: string) {
   return parseCsv(await res.text())
 }
 
-const card = "rounded-xl bg-black/65 backdrop-blur-md p-4 min-w-0 break-words shadow-[0_0_0_1px_oklch(1_0_0/0.08)]"
+const card = `${surfaceStyle} p-4 min-w-0 break-words`
 const chip = "rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset"
 const roleTint: Record<string, string> = {
-  Host: "bg-rose-400/15 text-rose-200 ring-rose-400/30",
-  Admin: "bg-violet-400/15 text-violet-200 ring-violet-400/30",
-  Spreadsheets: "bg-emerald-400/15 text-emerald-200 ring-emerald-400/30",
-  Pooler: "bg-cyan-400/15 text-cyan-200 ring-cyan-400/30",
-  Playtester: "bg-lime-400/15 text-lime-200 ring-lime-400/30",
-  Streamer: "bg-fuchsia-400/15 text-fuchsia-200 ring-fuchsia-400/30",
-  Referee: "bg-blue-400/15 text-blue-200 ring-blue-400/30",
+  Host: "bg-ruby/15 text-ruby ring-ruby/30",
+  Admin: "bg-iris/15 text-iris ring-iris/30",
+  Spreadsheets: "bg-mint/15 text-mint ring-mint/30",
+  Pooler: "bg-sky/15 text-sky ring-sky/30",
+  Playtester: "bg-bow/15 text-bow ring-bow/30",
+  Streamer: "bg-blush/15 text-blush ring-blush/30",
+  Referee: "bg-silver/15 text-silver ring-silver/30",
 }
-const badgeChip = "shrink-0 inline-flex items-center gap-1 rounded-full bg-amber-400/20 px-2.5 py-0.5 text-xs font-medium text-amber-200 ring-1 ring-inset ring-amber-400/40"
-const link = "underline decoration-white/30 underline-offset-2 hover:decoration-white focus-visible:outline-2 focus-visible:outline-white rounded-sm"
+const badgeChip = "shrink-0 inline-flex items-center gap-1 rounded-full bg-bow/20 px-2.5 py-0.5 text-xs font-medium text-bow ring-1 ring-inset ring-bow/40"
+const link = `underline decoration-sky/40 underline-offset-2 hover:decoration-sky ${focusRing} rounded-sm`
 const enter = "hero-enter transition-transform duration-150 ease-out motion-safe:hover:-translate-y-0.5"
-const delay = (i: number) => ({ "--delay": `${Math.min(i, 6) * 50}ms` }) as CSSProperties
+const stagger = (i: number) => delay(Math.min(i, 6) * 50)
 
 function ExtLink({ href, children }: { href: string; children: string }) {
   return (
     <a href={href} target="_blank" rel="noopener noreferrer" className={link}>
-      {children}
-      <FiArrowUpRight aria-hidden="true" className="ml-0.5 inline align-[-0.1em] text-[0.85em] opacity-60" />
+      {children}{" "}
+      <FiArrowUpRight aria-hidden="true" className="inline align-[-0.1em] text-[0.85em] opacity-60" />
     </a>
   )
 }
@@ -141,7 +147,7 @@ function groupByYear<T>(items: T[], year: (item: T) => string) {
 
 function StaffCard({ item, i }: { item: Staff; i: number }) {
   return (
-    <article className={`${card} ${enter}`} style={delay(i)}>
+    <article className={`${card} ${enter}`} style={stagger(i)}>
       <div className="flex items-start justify-between gap-2">
         <h3 className="font-bold min-w-0">
           {item.forum ? <ExtLink href={item.forum}>{item.name}</ExtLink> : item.name}
@@ -185,31 +191,31 @@ function readCache(): { play: Play[]; staff: Staff[] } | null {
 }
 
 function tagTone(v: string) {
-  if (/elim|dnq|did not qualify/i.test(v)) return "bg-red-400/10 text-red-200 ring-red-400/30"
-  if (/seed/i.test(v)) return "bg-sky-400/10 text-sky-200 ring-sky-400/25"
+  if (/elim|dnq|did not qualify/i.test(v)) return "bg-ruby/10 text-ruby ring-ruby/30"
+  if (/seed/i.test(v)) return "bg-sky/10 text-sky ring-sky/25"
   return "bg-white/10 text-white/90 ring-white/15"
 }
 
 function PlayCard({ item, i }: { item: Play; i: number }) {
   const solo = item.team === "-" || !item.team
   return (
-    <article style={delay(i)} className={`flex flex-col justify-between gap-3 rounded-xl border border-white/10 bg-neutral-900/80 backdrop-blur-md p-4 min-w-0 break-words ${enter}`}>
+    <article style={stagger(i)} className={`flex flex-col justify-between gap-3 ${card} ${enter}`}>
       <div>
         <div className="flex items-start justify-between gap-2">
           <h3 className="font-bold min-w-0">{item.name}</h3>
           {item.badge && <Badge />}
         </div>
-        <p className="mt-1 text-sm text-gray-400">
+        <p className="mt-1 text-sm text-silver">
           {[item.acronym, item.rank, item.format].filter(Boolean).join(" · ")}
         </p>
         <p className="mt-3 text-sm font-bold text-white">{solo ? "Solo" : item.team}</p>
-        {!solo && <p className="mt-0.5 text-xs leading-relaxed text-neutral-300 whitespace-pre-line">{item.lineup}</p>}
+        {!solo && <p className="mt-0.5 text-xs leading-relaxed text-silver whitespace-pre-line">{item.lineup}</p>}
         <ul className="mt-3 flex flex-wrap gap-1.5">
           {[item.seed, item.result].filter(Boolean).map((v) => <li key={v} className={`${chip} ${tagTone(v)}`}>{v}</li>)}
         </ul>
       </div>
       {item.comment && (
-        <p className="rounded-r-md border-l-2 border-yellow-500 bg-white/5 px-3 py-2 text-sm italic text-white/80">
+        <p className="rounded-r-md border-l-2 border-bow bg-white/5 px-3 py-2 text-sm italic text-white/80">
           {item.comment}
         </p>
       )}
@@ -218,7 +224,7 @@ function PlayCard({ item, i }: { item: Play; i: number }) {
 }
 
 function Tournaments() {
-  const [tab, setTab] = useState<Tab>("play")
+  const [tab, setTab] = useState(currentTab)
   const [data, setData] = useState(readCache)
   const [status, setStatus] = useState<"loading" | "error" | "ok">("loading")
   const [roles, setRoles] = useState<string[]>([])
@@ -248,6 +254,12 @@ function Tournaments() {
 
   useEffect(() => { sync() }, [])
 
+  useEffect(() => {
+    const onHashChange = () => setTab(currentTab())
+    window.addEventListener("hashchange", onHashChange)
+    return () => window.removeEventListener("hashchange", onHashChange)
+  }, [])
+
   const tabs: { id: Tab; label: string }[] = [
     { id: "play", label: "Participate" },
     { id: "staff", label: "Staff" },
@@ -256,18 +268,18 @@ function Tournaments() {
 
   return (
     <section id="tournaments" aria-labelledby="tournaments-title"
-      className="bg-black/80 px-4 pt-20 pb-10 sm:px-10 flex-1 text-white">
+      className="bg-ink/80 px-4 pt-20 pb-10 sm:px-10 flex-1 text-white">
       <h1 id="tournaments-title" className="hero-enter text-3xl sm:text-5xl font-bold mb-6 text-center text-balance">
         Tournaments
       </h1>
 
-      <div className="hero-enter flex flex-wrap items-center justify-center gap-2 mb-6" style={delay(2)}>
+      <div className="hero-enter flex flex-wrap items-center justify-center gap-2 mb-6" style={stagger(2)}>
         {tabs.map(({ id, label }) => (
           <button
             key={id}
             type="button"
             aria-pressed={tab === id}
-            onClick={() => setTab(id)}
+            onClick={() => { location.hash = id === "play" ? "tournaments" : `tournaments/${id}` }}
             className={`${btnStyle} aria-pressed:bg-white aria-pressed:text-black aria-pressed:hover:bg-white`}
           >
             {label}
@@ -290,13 +302,13 @@ function Tournaments() {
                   type="button"
                   aria-pressed={roles.includes(role)}
                   onClick={() => toggleRole(role)}
-                  className={`${chip} py-1 transition-colors ${roles.includes(role) ? roleTint[role] : "bg-white/5 text-white/70 ring-white/15 hover:bg-white/10 hover:text-white"}`}
+                  className={`${chip} py-1 pointer-coarse:min-h-11 ${focusRing} aria-pressed:ring-2 aria-pressed:ring-current transition-colors ${roles.includes(role) ? roleTint[role] : "bg-white/5 text-white/70 ring-white/15 hover:bg-white/10 hover:text-white"}`}
                 >
                   {role}
                 </button>
               ))}
               {roles.length > 0 && (
-                <button type="button" onClick={() => setRoles([])} className="px-2 py-1 text-xs text-white/70 underline underline-offset-2 hover:text-white">
+                <button type="button" onClick={() => setRoles([])} className={`px-2 py-1 pointer-coarse:min-h-11 ${focusRing} text-xs text-white/70 underline underline-offset-2 hover:text-white`}>
                   Clear
                 </button>
               )}

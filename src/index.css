@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+@theme {
+  --color-ink: #000000;
+  --color-surface: #171717;
+  --color-silver: #cfc5cc;
+  --color-sky: #7ce0f2;
+  --color-iris: #9cc0ea;
+  --color-bow: #ffdc7d;
+  --color-blush: #edc9b8;
+  --color-mint: #8bffac;
+  --color-ruby: #ff9fa8;
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -7,7 +19,7 @@
 
   color-scheme: dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: gray;
+  background-color: var(--color-ink);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -35,7 +47,7 @@ dialog.preview {
 }
 
 dialog.preview::backdrop {
-  background-color: oklch(0 0 0 / 0.6);
+  background-color: color-mix(in oklab, var(--color-ink) 70%, transparent);
 }
 
 dialog.preview[open],
@@ -74,7 +86,7 @@ dialog.preview[open] {
   inset: 0;
   z-index: -1;
   border-radius: inherit;
-  box-shadow: 0 0 48px -8px oklch(1 0 0 / 0.18);
+  box-shadow: 0 0 48px -8px color-mix(in oklab, var(--color-sky) 35%, transparent);
   opacity: 0.35;
   pointer-events: none;
 }

@@ -1,3 +1,5 @@
+import { focusRing } from './Button/Button'
+
 const links = [
   { id: "home", label: "Home" },
   { id: "wife", label: "Wife" },
@@ -13,7 +15,7 @@ function Nav({ active }: { active: string }) {
             <a
               href={`#${id}`}
               aria-current={active === id ? "page" : undefined}
-              className="block px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wide text-white transition-colors duration-150 ease-out hover:bg-white/15 aria-[current=page]:bg-black/70"
+              className={`flex items-center pointer-coarse:min-h-11 ${focusRing} px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wide text-white transition-colors duration-150 ease-out hover:bg-white/15 aria-[current=page]:bg-black/70`}
             >
               {short ? (
                 <>

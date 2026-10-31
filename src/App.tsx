@@ -11,7 +11,7 @@ const pages = { home: Heading, wife: Wife, tournaments: Tournaments }
 type Page = keyof typeof pages
 
 const currentPage = (): Page => {
-  const hash = location.hash.slice(1)
+  const hash = location.hash.slice(1).split("/")[0]
   return Object.hasOwn(pages, hash) ? hash as Page : "home"
 }
 
